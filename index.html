@@ -3,26 +3,578 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sandi Noshy | Portfolio</title>
-  <!-- Bootstrap -->
+  <title>Sandi Noshy | Frontend & Shopify Developer</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/all.min.css">
-  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
-</head>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --bg2: #111111;
+      --bg3: #161616;
+      --accent: #ff6b35;
+      --accent2: #ff9a5c;
+      --text: #f0ede8;
+      --muted: #888;
+      --border: rgba(255,107,53,0.15);
+    }
 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ─── NAVBAR ─── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      padding: 18px 40px;
+      z-index: 1000;
+      background: transparent;
+      transition: all 0.4s ease;
+      border-bottom: 1px solid transparent;
+    }
+    .navbar.scrolled {
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 40px;
+    }
+    .navbar-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--text) !important;
+      letter-spacing: -0.5px;
+    }
+    .navbar-brand span { color: var(--accent); }
+    .nav-link {
+      color: var(--muted) !important;
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      transition: color 0.3s;
+      padding: 6px 14px !important;
+    }
+    .nav-link:hover { color: var(--text) !important; }
+    .nav-link.active-link { color: var(--accent) !important; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 100px 40px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%,-50%) scale(1.1); }
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero-label::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -3px;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .hero h1 .name-accent {
+      display: block;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .hero-desc strong { color: var(--text); }
+
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary-custom {
+      background: var(--accent);
+      color: #fff;
+      padding: 13px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary-custom:hover {
+      background: var(--accent2);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,107,53,0.35);
+    }
+    .btn-outline-custom {
+      background: transparent;
+      color: var(--text);
+      padding: 13px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-outline-custom:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-img-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+    .hero-img-bg {
+      width: 380px; height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%);
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    .hero-img-wrap img {
+      width: 320px;
+      position: relative;
+      z-index: 1;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 20px 40px rgba(255,107,53,0.2));
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+
+    /* Stats */
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item { }
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 80px 0; }
+    .section-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 500px;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--bg2); }
+    .about-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .about-text {
+      color: #aaa;
+      line-height: 1.8;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+    .about-text strong { color: var(--text); }
+
+    /* Skills */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .skill-tag {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,107,53,0.07);
+      border: 1px solid rgba(255,107,53,0.2);
+      color: var(--text);
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .skill-tag:hover {
+      background: rgba(255,107,53,0.15);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .skill-tag i { color: var(--accent); font-size: 0.8rem; }
+
+    /* ─── PROJECTS ─── */
+    #projects { background: var(--bg); }
+    .project-card {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      height: 100%;
+    }
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(255,107,53,0.12);
+    }
+    .project-img {
+      width: 100%; height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .project-card:hover .project-img { transform: scale(1.04); }
+    .project-img-wrap { overflow: hidden; position: relative; }
+
+    .project-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .project-body {
+      padding: 24px;
+    }
+    .project-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .project-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .tech-pill {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #ccc;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .project-links { display: flex; gap: 10px; }
+    .btn-view {
+      flex: 1;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-view:hover { background: var(--accent2); color: #fff; }
+    .btn-view.outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted);
+      flex: 0;
+      padding: 10px 14px;
+    }
+    .btn-view.outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ─── EDUCATION ─── */
+    #education { background: var(--bg2); }
+    .timeline { position: relative; padding-left: 40px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px; top: 8px;
+      width: 2px;
+      height: calc(100% - 16px);
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 36px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -35px; top: 6px;
+      width: 12px; height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(255,107,53,0.15);
+    }
+    .timeline-date {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .timeline-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .timeline-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ─── CONTACT ─── */
+    #contact { background: var(--bg); }
+    .contact-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .contact-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      color: inherit;
+    }
+    .contact-icon {
+      width: 56px; height: 56px;
+      background: rgba(255,107,53,0.1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 1.3rem;
+      color: var(--accent);
+      transition: all 0.3s;
+    }
+    .contact-card:hover .contact-icon {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(255,107,53,0.35);
+    }
+    .contact-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .contact-value {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 36px 40px;
+    }
+    .footer-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .footer-name span { color: var(--accent); }
+    .footer-copy {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* ─── TYPING CURSOR ─── */
+    .typing-cursor {
+      display: inline-block;
+      width: 2px; height: 1.1em;
+      background: var(--accent);
+      margin-left: 3px;
+      animation: blink 0.8s step-end infinite;
+      vertical-align: middle;
+    }
+
+    /* ─── SCROLL INDICATOR ─── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollLine 1.5s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+      50% { opacity: 1; transform: scaleY(1); }
+      100% { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
+    }
+    .scroll-text {
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      transform: rotate(90deg) translateX(10px);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .navbar { padding: 14px 20px; }
+      .hero { padding: 90px 20px 60px; }
+      .hero-img-wrap img { width: 220px; }
+      .hero-stats { flex-wrap: wrap; gap: 20px; }
+      section { padding: 60px 0; }
+    }
+  </style>
+</head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-      <button class="navbar-toggler bg-body" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="#home">Sandi<span>.</span></a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav" style="filter: invert(1)">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav gap-3">
+      <div class="collapse navbar-collapse justify-content-center" id="nav">
+        <ul class="navbar-nav gap-1">
           <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#about">About Me</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
           <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
           <li class="nav-item"><a class="nav-link" href="#education">Education</a></li>
           <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
@@ -31,206 +583,299 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero d-flex align-items-center">
-    <div class="container d-flex flex-column flex-lg-row align-items-center justify-content-center">
-      <!-- Text -->
-      <div class="hero-content text-center text-lg-start" data-aos="fade-right" data-aos-duration="1200">
-        <h1>I'm <span class="gradient-text">Sandi Noshy</span></h1>
-       <p class="tagline" id="typing"></p>
-        <br>
-        <a href="#projects" class="btn-glow">See My Work</a>
-      </div>
-      <!-- Image -->
-      <div class="hero-img mt-4 mt-lg-0">
-        <img src="assets/Gemini_Generated_Image_2qss402qss402qss__1_-removebg-preview.png" class="img-fluid floating" width="500px" >
-      </div>
-    </div>
-  </section>
-
-  <!-- About Me Section -->
-  <section id="about" class="about py-5" data-aos="fade-up" data-aos-duration="1200">
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="hero-glow"></div>
     <div class="container">
-      <h2 class="section-title">About Me</h2>
-      <p class="about-text">
-        I’m a passionate <span class="highlight">Web Developer</span> with a strong interest in 
-        creating modern, user-friendly websites. I started my journey with 
-        <span class="highlight">HTML, CSS, JavaScript, Bootstrap and React</span>, and I’m now building interactive projects 
-        while improving my frontend skills.
-      </p>
-      <p class="about-text">
-        Currently, I’m also learning backend development with <span class="highlight">Laravel</span>, 
-        aiming to become a <span class="highlight">Full-Stack Developer</span> in the near future. 
-        I enjoy solving problems, bringing creative ideas to life, and I’m always eager 
-        to learn new technologies that help me grow in this field.
-      </p>
-
-      <!-- Skills -->
-      <div class="skills mt-4">
-        <span class="badge skill-badge">HTML</span>
-        <span class="badge skill-badge">CSS</span>
-        <span class="badge skill-badge">JavaScript</span>
-        <span class="badge skill-badge">Bootstrap</span>
-        <span class="badge skill-badge">React</span>
-        <span class="badge skill-badge">Laravel (Learning)</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Projects -->
-  <section id="projects" class="py-5" data-aos="fade-up" data-aos-duration="1200">
-    <div class="container">
-      <h3 class="text-center mb-5">My Projects</h3>
-      <div class="row g-4">
-
-        <!-- Project Card -->
-        <div class="col-md-4">
-          <div class="card project-card h-100">
-            <div class="img-wrapper">
-              <img src="assets/Document - Google Chrome 9_24_2025 11_09_55 PM.png" class="card-img-top" alt="Project Screenshot">
-            </div>
-            <div class="card-body text-center">
-              <h5 class="card-title">Portfolio Website</h5>
-              <p class="card-text">
-                A modern personal portfolio built with HTML, CSS, and JavaScript.
-              </p>
-              <a href="#" class="btn btn-primary">View Project</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card project-card h-100">
-            <div class="img-wrapper">
-              <img src="assets/Criativo - Google Chrome 9_24_2025 11_03_23 PM.png" class="card-img-top" alt="Project Screenshot">
-            </div>
-            <div class="card-body text-center">
-              <h5 class="card-title">Portfolio Website</h5>
-              <p class="card-text">
-                A modern personal portfolio built with HTML, CSS, and JavaScript.
-              </p>
-              <a href="#" class="btn btn-primary">View Project</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card project-card h-100">
-            <div class="img-wrapper">
-              <img src="assets/Criativo - Google Chrome 9_24_2025 11_06_35 PM.png" class="card-img-top" alt="Project Screenshot">
-            </div>
-            <div class="card-body text-center">
-              <h5 class="card-title">Portfolio Website</h5>
-              <p class="card-text">
-                A modern personal portfolio built with HTML, CSS, and JavaScript.
-              </p>
-             <a href="https://abana-pulizia.netlify.app/" target="_blank" class="btn btn-primary">View Project</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Education -->
-  <section class="education-section" id="education" data-aos="fade-up" data-aos-duration="1200">
-    <div class="container">
-        <h2 class="section-title">EDUCATION</h2>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-date">2020</div>
-                <div class="timeline-content">
-                    <h3 class="degree-title">High School</h3>
-                    <p class="school-name">Sidi Bishr Baher Secondary School</p>
-                </div>
-            </div>
-            
-            <div class="timeline-item">
-                <div class="timeline-date">2022 - Present</div>
-                <div class="timeline-content">
-                    <h3 class="degree-title">Bachelor Degree</h3>
-                    <p class="school-name">Faculty of Science | Computer Science (CS)</p>
-                </div>
-            </div>
-        </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="contact-section" id="contact" data-aos="fade-up" data-aos-duration="1200">
-    <div class="container">
-      <div class="contact-header">
-        <h2 class="contact-title">GET IN TOUCH</h2>
-        <p class="contact-subtitle">Let's Work Together</p>
-      </div>
-
-      <div class="contact-info">
-        <div class="contact-item">
-  <a href="tel:01210197456">
-    <div class="icon-circle">
-      <i class="fas fa-phone-alt"></i>
-    </div>
-  </a>
-  <h3 class="item-title">Phone</h3>
-  <a href="tel:01210197456">SandiNoshy-Phone</a>
-</div>
-
-        <div class="contact-item">
-          <a href="mailto:noshysamir17@gmail.com">
-            <div class="icon-circle">
-              <i class="fas fa-envelope"></i>
-            </div>
-          </a>
-          <h3 class="item-title">Email</h3>
-          <a href="mailto:noshysamir17@gmail.com">SandiNoshy-Email</a>
-        </div>
-
-
-        <div class="contact-item">
-          <a href="https://github.com/Sandi784-boot" target="_blank">
-          <div class="icon-circle">
-            <i class="fa-brands fa-github"></i>
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7" data-aos="fade-right" data-aos-duration="900">
+          <div class="hero-label">Available for freelance work</div>
+          <h1>
+            Frontend &amp;
+            <span class="name-accent">Shopify</span>
+            Developer
+          </h1>
+          <p class="hero-desc">
+            Hi, I'm <strong>Sandi Noshy</strong> — I build fast, beautiful storefronts and web experiences.
+            Specialized in <strong>React</strong>, <strong>Shopify Liquid</strong>, and <strong>custom e-commerce</strong> solutions.
+          </p>
+          <div class="hero-btns">
+            <a href="#projects" class="btn-primary-custom">
+              <i class="fas fa-eye"></i> View My Work
+            </a>
+            <a href="#contact" class="btn-outline-custom">
+              <i class="fas fa-paper-plane"></i> Get in Touch
             </a>
           </div>
-          <h3 class="item-title">GitHub</h3>
-          <a href="https://github.com/Sandi784-boot" target="_blank">
-             SandiNoshy-GitHup
-          </a>
-        </div>
-
-        <div class="contact-item">
-          <a href="http://linkedin.com/in/sandi-noshy-988503320" target="_blank">
-            <div class="icon-circle">
-              <i class="fa-brands fa-linkedin-in"></i>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-number">5+</div>
+              <div class="stat-label">Projects Delivered</div>
             </div>
-          </a>
-          <h3 class="item-title">Linkedin</h3>
-          <a href="http://linkedin.com/in/sandi-noshy-988503320" target="_blank">
-           SandiNoshy-Linkedin
-          </a>
+            <div class="stat-item">
+              <div class="stat-number">2</div>
+              <div class="stat-label">Shopify Stores Built</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">100%</div>
+              <div class="stat-label">Client Satisfaction</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 d-flex justify-content-center" data-aos="fade-left" data-aos-duration="900">
+          <div class="hero-img-wrap">
+            <div class="hero-img-bg"></div>
+            <img src="assets/Gemini_Generated_Image_2qss402qss402qss__1_-removebg-preview.png" alt="Sandi Noshy">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="row g-5 align-items-start">
+        <div class="col-lg-5" data-aos="fade-right">
+          <span class="section-tag">Who I Am</span>
+          <h2 class="section-title">Crafting digital experiences that convert</h2>
+          <p class="section-sub">From pixel-perfect React UIs to full Shopify store builds — I bring ideas to life.</p>
+        </div>
+        <div class="col-lg-7" data-aos="fade-left">
+          <div class="about-card">
+            <p class="about-text">
+              I'm a <strong>Frontend Developer</strong> passionate about building modern, high-performance websites and e-commerce stores. I specialize in <strong>React</strong> for dynamic interfaces and <strong>Shopify Liquid</strong> for custom storefront development.
+            </p>
+            <p class="about-text">
+              I've built complete Shopify stores for real clients in Greece — handling everything from <strong>theme customization</strong> and <strong>product setup</strong> to <strong>responsive design</strong> and <strong>UX optimization</strong>.
+            </p>
+            <div class="skills-grid">
+              <span class="skill-tag"><i class="fab fa-react"></i> React.js</span>
+              <span class="skill-tag"><i class="fab fa-shopify"></i> Shopify</span>
+              <span class="skill-tag"><i class="fas fa-code"></i> Liquid</span>
+              <span class="skill-tag"><i class="fab fa-js-square"></i> JavaScript</span>
+              <span class="skill-tag"><i class="fab fa-html5"></i> HTML5</span>
+              <span class="skill-tag"><i class="fab fa-css3-alt"></i> CSS3</span>
+              <span class="skill-tag"><i class="fab fa-bootstrap"></i> Bootstrap</span>
+              <span class="skill-tag"><i class="fas fa-store"></i> E-Commerce</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <div class="text-center mb-5" data-aos="fade-up">
+        <span class="section-tag">Selected Work</span>
+        <h2 class="section-title">Projects I've built</h2>
+        <p class="section-sub mx-auto">Real projects, real clients — from custom Shopify stores to React web apps.</p>
+      </div>
+      <div class="row g-4">
+
+        <!-- Project 1: Myrten Home -->
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+          <div class="project-card">
+            <div class="project-img-wrap">
+              <img src="https://myrtenhome.gr/cdn/shop/files/photo_2026-01-17_01-33-53.jpg?v=1768606456&width=600" class="project-img" alt="Myrten Home Shopify Store">
+              <span class="project-badge">Shopify</span>
+            </div>
+            <div class="project-body">
+              <h5 class="project-title">Myrten Home</h5>
+              <p class="project-desc">Full Shopify e-commerce store for a Greek home décor brand. Custom theme, product catalog, wishlist feature, and fully responsive design.</p>
+              <div class="project-tech">
+                <span class="tech-pill">Shopify</span>
+                <span class="tech-pill">Liquid</span>
+                <span class="tech-pill">CSS</span>
+                <span class="tech-pill">E-Commerce</span>
+              </div>
+              <div class="project-links">
+                <a href="https://myrtenhome.gr/" target="_blank" class="btn-view">
+                  <i class="fas fa-external-link-alt"></i> Live Site
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
+        <!-- Project 2: Stoa Grooming -->
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="project-card">
+            <div class="project-img-wrap">
+              <img src="https://stoagrooming.gr/cdn/shop/files/Gemini_Generated_Image_h8n6kqh8n6kqh8n6.png?v=1766442969&width=600" class="project-img" alt="Stoa Grooming Shopify Store">
+              <span class="project-badge">Shopify</span>
+            </div>
+            <div class="project-body">
+              <h5 class="project-title">Stoa Grooming</h5>
+              <p class="project-desc">Premium men's grooming Shopify store for a Greek brand. Clean dark aesthetic, 150+ products, and smooth checkout experience.</p>
+              <div class="project-tech">
+                <span class="tech-pill">Shopify</span>
+                <span class="tech-pill">Liquid</span>
+                <span class="tech-pill">JS</span>
+                <span class="tech-pill">UX Design</span>
+              </div>
+              <div class="project-links">
+                <a href="https://stoagrooming.gr/" target="_blank" class="btn-view">
+                  <i class="fas fa-external-link-alt"></i> Live Site
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3: Abana Pulizia -->
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="project-card">
+            <div class="project-img-wrap">
+              <img src="assets/Criativo - Google Chrome 9_24_2025 11_06_35 PM.png" class="project-img" alt="Abana Pulizia">
+              <span class="project-badge">Frontend</span>
+            </div>
+            <div class="project-body">
+              <h5 class="project-title">Abana Pulizia</h5>
+              <p class="project-desc">Modern service landing page with clean layout, smooth animations, and a compelling call-to-action design built with HTML/CSS/JS.</p>
+              <div class="project-tech">
+                <span class="tech-pill">HTML</span>
+                <span class="tech-pill">CSS</span>
+                <span class="tech-pill">JavaScript</span>
+              </div>
+              <div class="project-links">
+                <a href="https://abana-pulizia.netlify.app/" target="_blank" class="btn-view">
+                  <i class="fas fa-external-link-alt"></i> Live Site
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="portfolio-footer">
-    <div class="footer-line"></div>
-    <div class="footer-content">
-      <h2 class="footer-name">SANDI NOSHY</h2>
-      <p class="portfolio-year">PORTFOLIO 2025</p>
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="container">
+      <div class="row g-5 align-items-start">
+        <div class="col-lg-4" data-aos="fade-right">
+          <span class="section-tag">Background</span>
+          <h2 class="section-title">Education</h2>
+          <p class="section-sub">My academic foundation combined with hands-on project experience.</p>
+        </div>
+        <div class="col-lg-8" data-aos="fade-left">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-date">2022 — Present</div>
+              <div class="timeline-title">Bachelor of Computer Science</div>
+              <div class="timeline-sub">Faculty of Science — Computer Science Department</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">2020</div>
+              <div class="timeline-title">High School Diploma</div>
+              <div class="timeline-sub">Sidi Bishr Baher Secondary School</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="footer-line"></div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="text-center mb-5" data-aos="fade-up">
+        <span class="section-tag">Let's Talk</span>
+        <h2 class="section-title">Get in touch</h2>
+        <p class="section-sub mx-auto">Have a project in mind? I'd love to hear about it. Let's build something great together.</p>
+      </div>
+      <div class="row g-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-6 col-md-3">
+          <a href="tel:01210197456" class="contact-card">
+            <div class="contact-icon"><i class="fas fa-phone"></i></div>
+            <div class="contact-label">Phone</div>
+            <div class="contact-value">+20 121 019 7456</div>
+          </a>
+        </div>
+        <div class="col-6 col-md-3">
+          <a href="mailto:noshysamir17@gmail.com" class="contact-card">
+            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value">noshysamir17@gmail.com</div>
+          </a>
+        </div>
+        <div class="col-6 col-md-3">
+          <a href="https://github.com/Sandi784-boot" target="_blank" class="contact-card">
+            <div class="contact-icon"><i class="fab fa-github"></i></div>
+            <div class="contact-label">GitHub</div>
+            <div class="contact-value">Sandi784-boot</div>
+          </a>
+        </div>
+        <div class="col-6 col-md-3">
+          <a href="http://linkedin.com/in/sandi-noshy-988503320" target="_blank" class="contact-card">
+            <div class="contact-icon"><i class="fab fa-linkedin-in"></i></div>
+            <div class="contact-label">LinkedIn</div>
+            <div class="contact-value">sandi-noshy</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div class="footer-name">Sandi<span>.</span>Noshy</div>
+    <div class="footer-copy">© 2025 · Frontend & Shopify Developer</div>
+    <div class="d-flex gap-3">
+      <a href="https://github.com/Sandi784-boot" target="_blank" style="color: var(--muted); font-size:1.1rem; transition:color 0.3s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-github"></i></a>
+      <a href="http://linkedin.com/in/sandi-noshy-988503320" target="_blank" style="color: var(--muted); font-size:1.1rem; transition:color 0.3s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'"><i class="fab fa-linkedin-in"></i></a>
+    </div>
   </footer>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  
-  <script>AOS.init({ duration: 1200 });</script>
-  <script src="js/main.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true, offset: 60 });
+
+    // Navbar scroll
+    window.addEventListener('scroll', () => {
+      document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Active nav link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active-link'));
+          const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active-link');
+        }
+      });
+    }, { threshold: 0.4 });
+    sections.forEach(s => observer.observe(s));
+
+    // Typing effect for hero tagline (optional tagline below name)
+    // If you want to add a typed subtitle under the h1, add <p id="typed-role"></p> and uncomment below:
+    // const roles = ["Frontend Developer", "Shopify Expert", "React Developer", "UI/UX Enthusiast"];
+    // let ri = 0, ci = 0, deleting = false;
+    // function typeRole() {
+    //   const el = document.getElementById('typed-role');
+    //   if (!el) return;
+    //   const role = roles[ri];
+    //   if (!deleting) {
+    //     el.textContent = role.substring(0, ci++);
+    //     if (ci > role.length) { deleting = true; setTimeout(typeRole, 1800); return; }
+    //   } else {
+    //     el.textContent = role.substring(0, ci--);
+    //     if (ci < 0) { deleting = false; ri = (ri + 1) % roles.length; ci = 0; }
+    //   }
+    //   setTimeout(typeRole, deleting ? 60 : 80);
+    // }
+    // typeRole();
+  </script>
 </body>
 </html>
